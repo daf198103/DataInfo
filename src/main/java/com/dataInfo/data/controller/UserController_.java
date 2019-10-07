@@ -44,17 +44,14 @@ public class UserController_
     }	
 
 	
-	@RequestMapping(value = "/byname/{name}", method = RequestMethod.GET)
-    public ResponseEntity<User_> searchByName(@PathVariable("name") String name)
-    {
-		User_ user = userService.findByuserName(name);
-		if(user==null) 
-		{
-			return new ResponseEntity<User_>(null,null,HttpStatus.OK);
-		}
- 
-        return new ResponseEntity<User_>(user, new HttpHeaders(), HttpStatus.OK);
-    }
+	/*
+	 * @RequestMapping(value = "/byname/{name}", method = RequestMethod.GET) public
+	 * ResponseEntity<User_> searchByName(@PathVariable("name") String name) { User_
+	 * user = userService.findByuserName(name); if(user==null) { return new
+	 * ResponseEntity<User_>(null,null,HttpStatus.OK); }
+	 * 
+	 * return new ResponseEntity<User_>(user, new HttpHeaders(), HttpStatus.OK); }
+	 */
 	
     
     @RequestMapping(value = "/bycpf/{cpf}", method = RequestMethod.GET)
@@ -71,8 +68,16 @@ public class UserController_
 	@PostMapping(value = "/create/save")//, method = RequestMethod.POST
     public ResponseEntity<User_> save(@RequestBody User_ user) 
     {
-    	userService.save(user);  
-	  return new ResponseEntity<User_>(user, new  HttpHeaders(),HttpStatus.OK); 
+    	User_ us = userService.findByCpf(user.getCpf());
+    	if(us == null) {
+    		userService.save(user);	
+    		return new ResponseEntity<User_>(user, new  HttpHeaders(),HttpStatus.OK);
+    	}else
+    	{
+    		return new ResponseEntity<User_>(null, new  HttpHeaders(),HttpStatus.OK);	
+    	}
+    	  
+	   
     }
 	
     
